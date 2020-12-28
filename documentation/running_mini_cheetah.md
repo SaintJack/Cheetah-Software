@@ -1,51 +1,1 @@
-# Running Mini Cheetah
-
-When viewed from the top, mini cheetah's two switches are in front.  The center switch is motor power and right switch is computer power.  Toggling the switch toward the back of the robot turns it on.
-
-First turn on computer power.  It takes around 2 minutes for the computer to boot.
-SSH into the computer with `ssh user@10.0.0.34`.  The password is the usual lab password.  You must set your computer's IP address to something like `10.0.0.xxx` for this to work.
-
-Next, set up your computer for LCM.  In the scripts folder, run `./config_network_lcm.sh -I ` followed by the name of your network adapter you're connecting with.  If you want, you can edit the script to add a shortcut for your specific network adapter.
-
-To build code which can run on the mini cheetah:
-
-- `mkdir mc-build && cd mc-build`
-- `cmake -DMINI_CHEETAH_BUILD=TRUE ..`
-- `make -j`
-
-Then, to copy the code to the robot, run `../scripts/send_to_mini_cheetah.sh user/yourController/your_controller`.  You will be prompted for the mini cheetah's password.
-
-If you would like to open LCM spy, you can do this by running `../script/launch_lcm_spy.sh`.  If you receive an error about Java, try running `../scripts/launch_lcm_spy_jdk_fix.sh`, which has modified launch arguments to support newer versions of the JVM.
-
-
-On the mini cheetah, you will find a folder in the home directory name `robot-software` and the date.  Inside this folder is a copy of the configure lcm script.  Run `./configure_network_lcm.sh mc-top` if you are connected with the ethernet cable on top of the robot.
-
-To run the robot code, enter the build folder and run `(sudo) nohup mc_run.sh`.  The mini cheetah program will wait until the interface has been open and started in MiniCheetah, Robot mode.
-
-The robot controller currently works with:
-
-- State estimate (orientation only), access with `_stateEstimate`
-- Leg control (torque feedforward, force feedforward, PD control cartesian, PD control joint), access through LegCommand.  Note that the leg command is zeroed for you on each iteration.
-- Leg data (joint position/velocity, cartesian position/velocity in hip frame, jacobian in hip frame)
-- Gamepad data
-- Main Visualization (this is just a single cheetah model, the rest is still being implemented)
-- Control parameters (set in the simulator gui)
-- Configuration files (using the `THIS_COM`, or relative paths to the build folder)
-
-
-It does not work with
-- Full state estimator (position, velocity)
-- Full visualization data
-- Cheater state when running on the robot
-
-Current LCM streams
-- Raw spi data
-- Raw vectornav data
-- gamepad
-- main visualization
-
-Currently missing LCM streams
-- Generic leg data
-- State estimate
-- Probably others I am forgetting
-
+# Running Mini Cheetah 运行Mini CheetahWhen viewed from the top, mini cheetah's two switches are in front.  The center switch is motor power and right switch is computer power.  Toggling the switch toward the back of the robot turns it on.当从顶视图来看，mini cheetah的两个开关在前方。中间的开关是点击电源开关，右侧的开关是计算机电源开关。按下开关可以启动机器人。First turn on computer power.  It takes around 2 minutes for the computer to boot.首先打开计算机电源开关。计算机启动大概要2分钟时间。SSH into the computer with `ssh user@10.0.0.34`.  The password is the usual lab password.  You must set your computer's IP address to something like `10.0.0.xxx` for this to work.通过SSH连接计算机，可用  `ssh user@10.0.0.34` 。密码是常规的实验室密码。你必须设置你电脑的IP地址，比如`10.0.0.xxx`，使两个处于同一网络。Next, set up your computer for LCM.  In the scripts folder, run `./config_network_lcm.sh -I ` followed by the name of your network adapter you're connecting with.  If you want, you can edit the script to add a shortcut for your specific network adapter.下一步，设置你的计算机的LCM。在scripts 文件夹中，执行`./config_network_lcm.sh -I ` 后面跟上你连接的网络适配器的名称。如果你愿意，你可以编辑这个脚本，添加上你的网络适配器。To build code which can run on the mini cheetah: 要构建代码，只需运行如下命令- `mkdir mc-build && cd mc-build`- `cmake -DMINI_CHEETAH_BUILD=TRUE ..`- `make -j`之后，要拷贝执行程序到机器人真机赏，运行`../scripts/send_to_mini_cheetah.sh user/yourController/your_controller`。你就会被提示输入mini cheetah的密码。Then, to copy the code to the robot, run `../scripts/send_to_mini_cheetah.sh user/yourController/your_controller`.  You will be prompted for the mini cheetah's password.如果你想打开LCM spy，你可以执行 `../script/launch_lcm_spy.sh`。如果你收到关于Java的错误，可以尝试执行 `../scripts/launch_lcm_spy_jdk_fix.sh`，这个脚本会修改启动参数以支持更新版本的JVM.If you would like to open LCM spy, you can do this by running `../script/launch_lcm_spy.sh`.  If you receive an error about Java, try running `../scripts/launch_lcm_spy_jdk_fix.sh`, which has modified launch arguments to support newer versions of the JVM.在mini cheetah的计算机上，你会发现home 文件夹下有一个 `robot-software`的文件夹。在这个文件夹中有一份lcm脚本配置的拷贝。如果机器人顶部的以太网线已经连接，执行`./configure_network_lcm.sh mc-top`On the mini cheetah, you will find a folder in the home directory name `robot-software` and the date.  Inside this folder is a copy of the configure lcm script.  Run `./configure_network_lcm.sh mc-top` if you are connected with the ethernet cable on top of the robot.要运行机器人程序，进入build文件夹，执行`(sudo) nohup mc_run.sh` ，mini cheetah程序就会执行并等待交互界面出现，并且以 MiniCheetah，Robot模式启动。To run the robot code, enter the build folder and run `(sudo) nohup mc_run.sh`.  The mini cheetah program will wait until the interface has been open and started in MiniCheetah, Robot mode.机器人控制器当前可以实现以下功能：The robot controller currently works with:- State estimate (orientation only), access with `_stateEstimate`  状态估计(只有朝向），可通过 `_stateEstimate`访问- Leg control (torque feedforward, force feedforward, PD control cartesian, PD control joint), access through LegCommand.  Note that the leg command is zeroed for you on each iteration.腿部控制(力矩前馈，力前馈，PD控制，PD控制点）可通过LegComand访问。注意：每次迭代leg command都会被置零。- Leg data (joint position/velocity, cartesian position/velocity in hip frame, jacobian in hip frame) 腿部数据(关节 位置/速度，髋关节笛卡尔坐标 位置/速度, 髋关节的雅可比矩阵)- Gamepad data - Main Visualization (this is just a single cheetah model, the rest is still being implemented)  主要的可视化(现阶段只是一个cheetah的模型，其他的还在实现中)- Control parameters (set in the simulator gui)  控制参数(在模拟器的界面中设置)- Configuration files (using the `THIS_COM`, or relative paths to the build folder)  配置文件(使用 `THIS_COM` 或者相对build文件夹的路径）It does not work with 无法支持的有：- Full state estimator (position, velocity) 全状态的估计(位置，速度)- Full visualization data  全可视化数据- Cheater state when running on the robot 运行机器人期间无法支持作弊状态Current LCM streams  当前的LCM流- Raw spi data  - Raw vectornav data- gamepad- main visualizationCurrently missing LCM streams  当前缺失的LCM流- Generic leg data  一般的腿部数据- State estimate    状态估计- Probably others I am forgetting  可能还有其他，我忘了。
